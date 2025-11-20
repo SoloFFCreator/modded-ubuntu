@@ -32,7 +32,7 @@
 
   - `yes | pkg up`
   - `pkg install git wget -y`
-  - `git clone --depth=1 https://github.com/modded-ubuntu/modded-ubuntu.git`
+  - `git clone --depth=1 https://github.com/SoloFFCreator/modded-ubuntu.git`
   - `cd modded-ubuntu`
   - `bash setup.sh`
 
@@ -91,10 +91,7 @@ Termux Proot Distro - https://github.com/termux/proot-distro
 
 ### Maintainers
 
-- [**Mustakim Ahmed**](https://github.com/BDhackers009)
-- [**Tahmid Rayat**](https://github.com/htr-tech)
-- [**0xBaryonyx**](https://github.com/Mahfuz-THBD)
-
+- [**Solo FF**](https://github.com/SoloFFCreator)
 
 ### If you like our work then dont forget to give a Star :)
 
