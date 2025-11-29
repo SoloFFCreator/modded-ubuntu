@@ -2,7 +2,7 @@
 <img src="./distro/image.jpg">
 </p>
 <p align="center">
-<img src="https://img.shields.io/badge/MADE%20IN-BANGLADESH-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
+<img src="https://img.shields.io/badge/MADE%20IN-NEPAL-red?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge">
 <img src="https://img.shields.io/badge/Version-2.0-blue?style=for-the-badge">
 </p>
 <p align="center">
