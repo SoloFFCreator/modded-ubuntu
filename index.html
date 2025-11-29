@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="Fit3prFUtxN7RtqXZo08sTNYpFgPt2FHi-Yeiq0AN84" />
+    
+    <title>Modded Ubuntu - Run Ubuntu GUI on Termux</title>
+    <meta name="description" content="A lightweight, feature-rich Modded Ubuntu OS for Termux on Android. Includes GUI, VS Code, Audio fixes, and more.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #E95420; /* Ubuntu Orange */
+            --secondary-color: #772953; /* Ubuntu Aubergine */
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --card-bg: #ffffff;
+            --code-bg: #2d2d2d;
+            --code-text: #f8f8f2;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #E95420;
+            --secondary-color: #A83875;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --nav-bg: rgba(18, 18, 18, 0.95);
+            --shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        header {
+            position: sticky;
+            top: 0;
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+        }
+
+        /* Code Blocks */
+        .code-container {
+            position: relative;
+            background: var(--code-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+            box-shadow: var(--shadow);
+        }
+
+        pre {
+            font-family: 'Fira Code', monospace;
+            color: var(--code-text);
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--card-bg);
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; } /* Simplified for mobile */
+            .logo { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <i class="fa-brands fa-ubuntu"></i> Modded Ubuntu
+        </a>
+        <nav class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#install">Installation</a>
+            <a href="#usage">Usage</a>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </header>
+
+    <section class="hero">
+        <h1>Ubuntu for Termux</h1>
+        <p>A lightweight, fully featured Modded Ubuntu environment for Android. Includes VS Code, Browsers, and Audio Fixes.</p>
+        <div>
+            <a href="#install" class="btn">Install Now</a>
+            <a href="https://github.com/SoloFFCreator/modded-ubuntu/" target="_blank" class="btn btn-outline">
+                <i class="fa-brands fa-github"></i> View on GitHub
+            </a>
+        </div>
+    </section>
+
+    <div class="container">
+        
+        <!-- Features Section -->
+        <section id="features">
+            <h2>Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-volume-high"></i></div>
+                    <h3>Fixed Audio</h3>
+                    <p>Audio output issues fixed. Enjoy sound directly from your Termux environment.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-code"></i></div>
+                    <h3>VS Code</h3>
+                    <p>Pre-installed Visual Studio Code for development on the go.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-brands fa-firefox-browser"></i></div>
+                    <h3>Browsers</h3>
+                    <p>Includes Chromium and Mozilla Firefox browsers for full web access.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3>Lightweight</h3>
+                    <p>Optimized for performance. Requires at least 4GB of storage.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-language"></i></div>
+                    <h3>Bangla Fonts</h3>
+                    <p>Native support for Bangla fonts included out of the box.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fa-solid fa-toolbox"></i></div>
+                    <h3>Hacking Tools</h3>
+                    <p>Includes Katoolin3 tool for installing Kali Linux tools easily.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation Section -->
+        <section id="install">
+            <h2>Installation</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Open Termux and run the following commands:</p>
+            
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('code1')">Copy</button>
+                <pre id="code1">pkg update -y && pkg upgrade -y
+pkg install git wget -y
+git clone https://github.com/SoloFFCreator/modded-ubuntu.git
+cd modded-ubuntu
+bash setup.sh</pre>
+            </div>
+            
+            <p><strong>Note:</strong> During installation, you may be asked to allow storage permissions. Ensure you have a stable internet connection.</p>
+        </section>
+
+        <!-- Usage Section -->
+        <section id="usage">
+            <h2>How to Use</h2>
+            
+            <h3>1. Setup User</h3>
+            <p>After installation, restart Termux and create your user:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('code2')">Copy</button>
+                <pre id="code2">ubuntu
+bash user.sh</pre>
+            </div>
+
+            <h3>2. Start GUI</h3>
+            <p>To start the graphical interface (VNC Server):</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('code3')">Copy</button>
+                <pre id="code3">ubuntu
+bash gui.sh</pre>
+            </div>
+            <p><em>Note down the VNC password you set!</em></p>
+
+            <h3>3. Connect</h3>
+            <p>Open <strong>VNC Viewer</strong> app on your phone:</p>
+            <ul>
+                <li><strong>Address:</strong> <code>localhost:1</code></li>
+                <li><strong>Name:</strong> Ubuntu</li>
+                <li><strong>Password:</strong> The one you created earlier.</li>
+            </ul>
+
+            <h3 style="margin-top: 20px;">Stop Server</h3>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode('code4')">Copy</button>
+                <pre id="code4">vncstop</pre>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Modded Ubuntu Project.</p>
+        <p>Created by <a href="https://github.com/SoloFFCreator" target="_blank">SoloFFCreator</a>.</p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+        
+        // Check system preference or saved theme
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.setAttribute('data-theme', 'dark');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (document.body.getAttribute('data-theme') === 'dark') {
+                document.body.removeAttribute('data-theme');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        });
+
+        // Copy to Clipboard
+        function copyCode(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector(`button[onclick="copyCode('${elementId}')"]`);
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
